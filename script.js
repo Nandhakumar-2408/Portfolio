@@ -1,18 +1,16 @@
 /* =========================================================
-   NANDHAKUMAR V M — PORTFOLIO SCRIPT (Vanilla JS)
+   NANDHAKUMAR V M — PORTFOLIO SCRIPT (Apple-Style)
    Sections:
    1. Loading Screen
-   2. Particle / Circuit Background
+   2. Ambient Background Glow
    3. Scroll Progress Bar
    4. Sticky Navbar + Mobile Toggle + Active Link
    5. Smooth Scroll (in-page anchors)
-   6. Typing Effect (home page)
-   7. Scroll Reveal (IntersectionObserver)
-   8. Skill Progress Bars + Counter Animation
-   9. Skills Tabs
-   10. Back To Top
-   11. Copy Email Button
-   12. Contact Form (UI only)
+   6. Scroll Reveal (IntersectionObserver)
+   7. Skills Tabs
+   8. Back To Top
+   9. Copy Email Button
+   10. Contact Form (UI only)
    ========================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -22,79 +20,53 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('load', () => {
     setTimeout(() => {
       if (loader) loader.classList.add('hidden');
-    }, 450);
+    }, 400);
   });
   // Fallback in case 'load' already fired
-  setTimeout(() => { if (loader) loader.classList.add('hidden'); }, 2500);
+  setTimeout(() => { if (loader) loader.classList.add('hidden'); }, 2000);
 
-  /* ---------- 2. Particle / Circuit Background ---------- */
+  /* ---------- 2. Ambient Background Glow ---------- */
   const canvas = document.getElementById('particle-canvas');
   if (canvas) {
+    // Apple-style subtle ambient glow — no particles, just soft radial gradients
     const ctx = canvas.getContext('2d');
-    let particles = [];
     let width, height;
-    const MAX_DIST = 140;
+    let time = 0;
 
     function resizeCanvas() {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
     }
 
-    function initParticles() {
-      const count = Math.min(70, Math.floor((width * height) / 18000));
-      particles = Array.from({ length: count }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        r: Math.random() * 1.6 + 0.6
-      }));
-    }
-
-    function step() {
+    function drawAmbient() {
       ctx.clearRect(0, 0, width, height);
+      time += 0.003;
 
-      // update + draw nodes
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
+      // Soft blue glow - top right
+      const x1 = width * 0.7 + Math.sin(time) * 80;
+      const y1 = height * 0.2 + Math.cos(time * 0.7) * 60;
+      const grad1 = ctx.createRadialGradient(x1, y1, 0, x1, y1, width * 0.4);
+      grad1.addColorStop(0, 'rgba(41, 151, 255, 0.06)');
+      grad1.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad1;
+      ctx.fillRect(0, 0, width, height);
 
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(248,113,113,0.75)';
-        ctx.fill();
-      });
+      // Soft purple glow - bottom left
+      const x2 = width * 0.25 + Math.cos(time * 0.5) * 60;
+      const y2 = height * 0.75 + Math.sin(time * 0.8) * 50;
+      const grad2 = ctx.createRadialGradient(x2, y2, 0, x2, y2, width * 0.35);
+      grad2.addColorStop(0, 'rgba(100, 100, 255, 0.04)');
+      grad2.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad2;
+      ctx.fillRect(0, 0, width, height);
 
-      // draw circuit-like connecting lines
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const a = particles[i], b = particles[j];
-          const dx = a.x - b.x, dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < MAX_DIST) {
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(220,38,38,${(1 - dist / MAX_DIST) * 0.25})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-      }
-
-      requestAnimationFrame(step);
+      requestAnimationFrame(drawAmbient);
     }
 
     resizeCanvas();
-    initParticles();
-    requestAnimationFrame(step);
+    requestAnimationFrame(drawAmbient);
 
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-      initParticles();
-    });
+    window.addEventListener('resize', resizeCanvas);
   }
 
   /* ---------- 3. Scroll Progress Bar ---------- */
@@ -156,9 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-
-
-  /* ---------- 7. Scroll Reveal ---------- */
+  /* ---------- 6. Scroll Reveal ---------- */
   const revealEls = document.querySelectorAll('.reveal, .timeline-item');
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -167,39 +137,10 @@ document.addEventListener('DOMContentLoaded', () => {
         revealObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+  }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
   revealEls.forEach(el => revealObserver.observe(el));
 
-  /* ---------- 8. Skill Progress Bars + Counter Animation ---------- */
-  const progressFills = document.querySelectorAll('.progress-fill');
-  const progressObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const fill = entry.target;
-        const pct = fill.getAttribute('data-percent') || '0';
-        fill.style.width = pct + '%';
-
-        const pctLabel = fill.closest('.skill-card')?.querySelector('.skill-pct');
-        if (pctLabel) {
-          let current = 0;
-          const target = parseInt(pct, 10);
-          const step = Math.max(1, Math.floor(target / 40));
-          const counter = setInterval(() => {
-            current += step;
-            if (current >= target) {
-              current = target;
-              clearInterval(counter);
-            }
-            pctLabel.textContent = current + '%';
-          }, 20);
-        }
-        progressObserver.unobserve(fill);
-      }
-    });
-  }, { threshold: 0.3 });
-  progressFills.forEach(fill => progressObserver.observe(fill));
-
-  /* ---------- 9. Skills Tabs ---------- */
+  /* ---------- 7. Skills Tabs ---------- */
   const tabs = document.querySelectorAll('.skills-tab');
   const panels = document.querySelectorAll('.skill-panel');
   tabs.forEach(tab => {
@@ -210,19 +151,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const targetPanel = document.getElementById(tab.getAttribute('data-target'));
       if (targetPanel) {
         targetPanel.classList.add('active');
-        // re-trigger progress animation for newly shown panel
-        targetPanel.querySelectorAll('.progress-fill').forEach(fill => {
-          const pct = fill.getAttribute('data-percent') || '0';
-          fill.style.width = '0%';
-          requestAnimationFrame(() => {
-            setTimeout(() => { fill.style.width = pct + '%'; }, 30);
-          });
-        });
       }
     });
   });
 
-  /* ---------- 10. Back To Top ---------- */
+  /* ---------- 8. Back To Top ---------- */
   const backToTop = document.getElementById('back-to-top');
   if (backToTop) {
     window.addEventListener('scroll', () => {
@@ -233,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ---------- 11. Copy Email Button ---------- */
+  /* ---------- 9. Copy Email Button ---------- */
   document.querySelectorAll('.copy-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
       const text = btn.getAttribute('data-copy');
@@ -253,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------- 12. Contact Form (UI only, no backend) ---------- */
+  /* ---------- 10. Contact Form (UI only, no backend) ---------- */
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
