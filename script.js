@@ -199,4 +199,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ---------- 11. ProtoSem Journal Pagination ---------- */
+  const weekPages = document.querySelectorAll('.week-page');
+  const prevBtn = document.getElementById('prev-page');
+  const nextBtn = document.getElementById('next-page');
+  const pageIndicator = document.getElementById('page-indicator');
+
+  if (weekPages.length > 0 && prevBtn && nextBtn && pageIndicator) {
+    let currentPage = 0;
+    const totalPages = weekPages.length;
+
+    function updatePagination() {
+      // Hide all pages
+      weekPages.forEach(page => page.classList.remove('active-page'));
+      
+      // Show current page
+      weekPages[currentPage].classList.add('active-page');
+      
+      // Update text (assuming first page is Week 0)
+      pageIndicator.textContent = `Week ${currentPage} of ${totalPages - 1}`;
+      
+      // Update buttons
+      prevBtn.disabled = currentPage === 0;
+      nextBtn.disabled = currentPage === totalPages - 1;
+
+      // Scroll to top of the book container smoothly
+      const bookContainer = document.querySelector('.journal-book-container');
+      if (bookContainer) {
+         const y = bookContainer.getBoundingClientRect().top + window.scrollY - 100; // offset for navbar
+         window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 0) {
+        currentPage--;
+        updatePagination();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentPage < totalPages - 1) {
+        currentPage++;
+        updatePagination();
+      }
+    });
+
+    // Initialize
+    updatePagination();
+  }
+
 });
