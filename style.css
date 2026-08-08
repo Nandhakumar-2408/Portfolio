@@ -414,22 +414,35 @@ h1,h2,h3,h4{
   color:transparent;
 }
 
-.typing-line{
-  font-family:var(--font-display);
+.rolling-text-container {
+  font-family: var(--font-display);
   font-size: clamp(1.05rem, 2vw, 1.35rem);
-  font-weight:600;
+  font-weight: 600;
   color: var(--text-1);
-  min-height: 1.6em;
-  margin-bottom:22px;
+  height: 1.6em;
+  margin-bottom: 22px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: center;
 }
-.typing-cursor{
-  display:inline-block;
-  width:2px;
-  background:var(--accent-2);
-  margin-left:2px;
-  animation: blink 0.9s steps(1) infinite;
+.rolling-text-inner {
+  display: flex;
+  flex-direction: column;
+  animation: rollUp 8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
 }
-@keyframes blink{ 50%{ opacity:0; } }
+.rolling-text-inner span {
+  height: 1.6em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@keyframes rollUp {
+  0%, 20% { transform: translateY(0); }
+  33%, 53% { transform: translateY(-1.6em); }
+  66%, 86% { transform: translateY(-3.2em); }
+  100% { transform: translateY(-4.8em); }
+}
 
 .hero p.desc{
   max-width:560px;

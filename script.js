@@ -156,34 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------- 6. Typing Effect ---------- */
-  const typingEl = document.getElementById('typing-text');
-  if (typingEl) {
-    const phrases = JSON.parse(typingEl.getAttribute('data-phrases') || '[]');
-    let phraseIndex = 0, charIndex = 0, deleting = false;
 
-    function typeLoop() {
-      const current = phrases[phraseIndex];
-      if (!deleting) {
-        charIndex++;
-        typingEl.textContent = current.slice(0, charIndex);
-        if (charIndex === current.length) {
-          deleting = true;
-          setTimeout(typeLoop, 1500);
-          return;
-        }
-      } else {
-        charIndex--;
-        typingEl.textContent = current.slice(0, charIndex);
-        if (charIndex === 0) {
-          deleting = false;
-          phraseIndex = (phraseIndex + 1) % phrases.length;
-        }
-      }
-      setTimeout(typeLoop, deleting ? 40 : 70);
-    }
-    if (phrases.length) typeLoop();
-  }
 
   /* ---------- 7. Scroll Reveal ---------- */
   const revealEls = document.querySelectorAll('.reveal, .timeline-item');
