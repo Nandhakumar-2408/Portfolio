@@ -576,10 +576,10 @@ h1,h2,h3,h4{
 
 /* ---------- 10. About Page ---------- */
 .about-grid{
-  display:grid;
-  grid-template-columns: 0.9fr 1.1fr;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
   gap:40px;
-  align-items:start;
 }
 .about-card{
   padding:34px;
