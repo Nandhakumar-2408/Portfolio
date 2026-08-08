@@ -679,10 +679,10 @@ h1,h2,h3,h4{
 .timeline::before{
   content:"";
   position:absolute;
-  left:6px; top:6px; bottom:6px;
-  width:2px;
+  left:6.5px; top:6px; bottom:6px;
+  width:1px;
   background: linear-gradient(var(--accent), transparent 95%);
-  opacity:0.4;
+  opacity:0.25;
 }
 .timeline-item{
   position:relative;
@@ -691,12 +691,12 @@ h1,h2,h3,h4{
 .timeline-item:last-child{ padding-bottom:0; }
 .timeline-dot{
   position:absolute;
-  left:-32px; top:6px;
-  width:14px; height:14px;
+  left:-30px; top:8px;
+  width:10px; height:10px;
   border-radius:50%;
   background: var(--bg-0);
   border:2px solid var(--accent-2);
-  box-shadow: 0 0 0 4px rgba(220,38,38,0.15);
+  box-shadow: 0 0 0 3px rgba(220,38,38,0.12);
 }
 .timeline-item.is-visible .timeline-dot{
   animation: dot-pop .5s var(--ease);
